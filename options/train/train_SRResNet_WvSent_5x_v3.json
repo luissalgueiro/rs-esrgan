@@ -1,0 +1,88 @@
+// Not total the same as SRResNet in <Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network>
+// With 16 Residual blocks w/o BN
+{
+  "name": "P30_SRResNet_ESRGAN_WvSent_L1_x5_PREUP_StanData_100K_FT" //  please remove "debug_" during training
+  , "use_tb_logger": true
+  , "model":"sr"
+  , "scale": 5
+  , "gpu_ids": [1]
+
+  , "datasets": {
+    "train": {
+      "name": "GDAL"
+      , "mode": "NoUpsamplingGDAL_PretrainRGB_v3" //"GDAL_5x"
+      , "data_IDs": "/mnt/gpid07/users/luis.salgueiro/datasets/wv_sent_rois2/Train_set.csv"
+      , "dataroot_HR": "/mnt/gpid07/users/luis.salgueiro/datasets/wv_sent_rois2/"
+      , "dataroot_LR": "/mnt/gpid07/users/luis.salgueiro/datasets/wv_sent_rois2/"
+      , "subset_file": null
+      , "use_shuffle": true
+      , "n_workers": 4
+      , "batch_size": 2
+      , "HR_size": 128 // 128 | 192
+      , "use_flip": true
+      , "use_rot": true
+      , "stand": true
+      , "LR_down": false // downsampling HR image by scale factor to form LR image
+      , "PreUP": true
+      , "norm" : false
+      , "up_lr": false
+      ,"HF": false
+      , "scale": 5
+
+    }
+    , "val": {
+      "name": "val_GDAL"
+      , "mode": "NoUpsamplingGDAL_PretrainRGB_v3"//"GDAL_5x"
+      , "data_IDs": "/mnt/gpid07/users/luis.salgueiro/datasets/wv_sent_rois2/Valid_set.csv"
+      , "dataroot_HR": "/mnt/gpid07/users/luis.salgueiro/datasets/wv_sent_rois2/"
+      , "dataroot_LR": "/mnt/gpid07/users/luis.salgueiro/datasets/wv_sent_rois2/"
+      , "HR_size": 128
+      , "stand" : true
+      , "norm" : false
+      , "LR_down": false
+      ,  "PreUP": true
+      , "up_lr": false
+      ,"HF": false
+      , "scale": 5
+
+    }
+  }
+
+  , "path": {
+    "root":"/imatge/lsalgueiro/git/mnt/BasicSR"
+    ,  "work_root": "/mnt/gpid07/users/luis.salgueiro/git/mnt/BasicSR_2020/"   // WORK-> gpid07
+   // , "resume_state": "/mnt/gpid08/users/luis.salgueiro/git/mnt/BasicSR/experiments/P55_SRResNet_ESRGAN_WvSent_L1_x5_PREUP_StandDataNotNorm_100K_FT/training_state/97500.state"
+    , "pretrain_model_G": "/mnt/gpid07/users/luis.salgueiro/git/mnt/BasicSR_2020/experiments/P11_SRResNet_EUcities_L1_x5_PREUP_StandDataNotNorm_None/models/100000_G.pth"
+    
+}
+
+  , "network_G": {
+    "which_model_G": "RRDB_net" // RRDB_net(SIN UP) | sr_resnet |  RRDB_net_orig RRDBNet_orig_5x | RRDBNet_orig_4x(1BLOQUE)
+    , "norm_type": null  // null, batch, instance
+    , "mode": "CNA"
+    , "nf": 64
+    , "nb": 23
+    , "in_nc": 4
+    , "out_nc": 4
+  }
+
+  , "train": {
+    "lr_G": 1e-4
+    , "lr_scheme": "MultiStepLR"
+    , "lr_steps": [20000,40000, 60000, 80000]
+    , "lr_gamma": 0.5
+
+    , "pixel_criterion": "l1"
+    , "pixel_weight": 1.0
+    , "val_freq": 10000
+
+    , "manual_seed": 100
+    , "niter": 101000
+  }
+
+  , "logger": {
+    "print_freq": 100
+    , "save_checkpoint_freq": 2500
+    , "save_checkpoint_freq_best": 5000
+  }
+}
