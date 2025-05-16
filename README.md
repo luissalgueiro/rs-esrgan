@@ -12,7 +12,7 @@ This code cannot be used for commercial purposes. Please contact the authors if 
 ## Data
 To train with [WorldView-2 European Cities dataset](https://earth.esa.int/eogateway/catalog/worldview-2-european-cities), you must download the data and follow the directions in options/train folder.
 
-To work with WorldView-Sentinel pairs, please contact the authors.
+WorldView-Sentinel pairs unfortunately cannot be shared due to license acquisition issues.
 
 ## Training
 
